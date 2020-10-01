@@ -17,7 +17,7 @@ if(mysqli_connect_errno()){
 //check if data from login form was submitted
 if(!isset($_POST['username'],$_POST['password'])){
     //if not exit and display error
-    exit('Please fill both the username and password fields!')
+    exit('Please fill both the username and password fields!');
 }
 
 if ($stmt=$con->prepare('SELECT id, password FROM accounts WHERE username = ?')){
@@ -28,8 +28,10 @@ if ($stmt=$con->prepare('SELECT id, password FROM accounts WHERE username = ?'))
     if($stmt->num_rows > 0){
         $stmt->bind_result($id,$password);
         $stmt->fetch();
+        
+        //if(password_verify($_POST['password'],$password)){
+        if($_POST['password']===$password){
 
-        if(password_verify($_POST['password'],$password)){
             session_regenerate_id();
             $_SESSION['logged_in']=TRUE;
             $_SESSION['name']=$_POST['username'];
@@ -37,13 +39,13 @@ if ($stmt=$con->prepare('SELECT id, password FROM accounts WHERE username = ?'))
             echo 'Welcome' . $_SESSION['name'] . '!';
 
         } else {
-            echo 'Incorrect username and/or password!';
+            echo 'Incorrect username and/or password! ';
         }
     } else {
-        echo 'Incorrect username and/or password!';
+        echo 'Incorrect username and/or password! ';
     }
 
-    }
+    
 
     $stmt->close();
 }
