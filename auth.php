@@ -36,13 +36,13 @@ if ($stmt=$con->prepare('SELECT id, password FROM accounts WHERE username = ?'))
             $_SESSION['logged_in']=TRUE;
             $_SESSION['name']=$_POST['username'];
             $_SESSION['id']=$id;
-            echo 'Welcome' . $_SESSION['name'] . '!';
+            header('location:home.php');
 
         } else {
-            echo 'Incorrect username and/or password! ';
+            header('location:index.html');
         }
     } else {
-        echo 'Incorrect username and/or password! ';
+        header('location:index.html');
     }
 
     
