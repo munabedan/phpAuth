@@ -21,6 +21,7 @@ if(!isset($_POST['username'],$_POST['password'],$_POST['email'])){
 $username= $_POST['username'];
 $password=$_POST['password'];
 $email=$_POST['email'];
+$hash =password_hash($password, PASSWORD_DEFAULT);
 
 if ($stmt=$con->prepare('SELECT id FROM accounts WHERE username = ?')){
     $stmt->bind_param('s',$_POST['username']);
@@ -29,7 +30,7 @@ if ($stmt=$con->prepare('SELECT id FROM accounts WHERE username = ?')){
 
     if($stmt->num_rows == 0){
         if($stmt=$con->prepare('INSERT INTO accounts (username,password,email) VALUES (?,?,?)')){
-            $stmt->bind_param("sss",$username,$password,$email);
+            $stmt->bind_param("sss",$username,$hash,$email);
             $stmt->execute();
         } else{
             header('location:index.html');
