@@ -17,10 +17,10 @@ if(mysqli_connect_errno()){
     exit('Failed to connect to MySQL: ' . mysqli_connect_error());
 }
 
-$stmt=$con->prepare('SELECT  password , email FROM accounts WHERE id=?');
+$stmt=$con->prepare('SELECT email FROM accounts WHERE id=?');
 $stmt->bind_param('i',$_SESSION['id']);
 $stmt->execute();
-$stmt->bind_result($password, $email);
+$stmt->bind_result( $email);
 $stmt->fetch();
 $stmt->close();
 ?>
@@ -49,10 +49,7 @@ $stmt->close();
 						<td>Username:</td>
 						<td><?=$_SESSION['name']?></td>
 					</tr>
-					<tr>
-						<td>Password:</td>
-						<td><?=$password?></td>
-					</tr>
+					
 					<tr>
 						<td>Email:</td>
 						<td><?=$email?></td>

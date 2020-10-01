@@ -1,4 +1,5 @@
 <?php
+session_start();
 
 $DATABASE_HOST='localhost';
 $DATABASE_USER='root';
@@ -32,6 +33,37 @@ if ($stmt=$con->prepare('SELECT id FROM accounts WHERE username = ?')){
         if($stmt=$con->prepare('INSERT INTO accounts (username,password,email) VALUES (?,?,?)')){
             $stmt->bind_param("sss",$username,$hash,$email);
             $stmt->execute();
+
+            //redirect to home page with session open
+
+            if ($stmt=$con->prepare('SELECT id, password FROM accounts WHERE username = ?')){
+                $stmt->bind_param('s',$_POST['username']);
+                $stmt->execute();
+                $stmt->store_result();
+            
+                if($stmt->num_rows > 0){
+                    $stmt->bind_result($id,$password);
+                    $stmt->fetch();
+                    
+                    if(password_verify($_POST['password'],$password)){
+                        session_regenerate_id();
+                        $_SESSION['logged_in']=TRUE;
+                        $_SESSION['name']=$_POST['username'];
+                        $_SESSION['id']=$id;
+                        header('location:home.php');
+            
+                    } else {
+                        header('location:index.html');
+                    }
+                } else {
+                    header('location:index.html');
+                }
+            
+                
+            
+                $stmt->close();
+            }
+
         } else{
             header('location:index.html');
         }
